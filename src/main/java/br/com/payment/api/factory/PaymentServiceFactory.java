@@ -2,10 +2,16 @@ package br.com.payment.api.factory;
 
 import br.com.payment.api.model.entity.PaymentType;
 import br.com.payment.api.service.payment.*;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+import javax.annotation.PostConstruct;
+import java.util.EnumMap;
+
+@Component
+@Getter
 public class PaymentServiceFactory {
 
     @Autowired
@@ -17,19 +23,18 @@ public class PaymentServiceFactory {
     @Autowired
     private PaypalService paypalService;
 
-    public PaymentService getPaymentService(PaymentType paymentType) {
-        switch (paymentType){
-            case CREDIT_CARD:
-                return creditCardService;
-            case PIX:
-                return pixService;
-            case PAYPAL:
-                return paypalService;
-            case BANK_SLIP:
-                return bankSlipService;
-        }
+    private final EnumMap<PaymentType, PaymentService> factoryMap = new EnumMap<>(PaymentType.class);
 
-        return creditCardService;
+    @PostConstruct
+    private void init() {
+        factoryMap.put(PaymentType.CREDIT_CARD, creditCardService);
+        factoryMap.put(PaymentType.BANK_SLIP, bankSlipService);
+        factoryMap.put(PaymentType.PIX, pixService);
+        factoryMap.put(PaymentType.PAYPAL, paypalService);
+    }
+
+    public PaymentService getPaymentService(PaymentType paymentType) {
+        return  getFactoryMap().get(paymentType);
     }
 
 }
