@@ -7,7 +7,7 @@ import br.com.payment.api.service.ProductService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PixService extends BasePaymentService {
+public final class PixService extends BasePaymentService {
 
 
     public PixService(ProductService productService, OrderService orderService) {

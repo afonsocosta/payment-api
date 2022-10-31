@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 @Slf4j
-public abstract class BasePaymentService implements PaymentService {
+public abstract sealed class BasePaymentService implements PaymentService permits CreditCardService, PixService, PaypalService, BankSlipService{
 
     private final ProductService productService;
 

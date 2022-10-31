@@ -9,20 +9,23 @@ import br.com.payment.api.model.vo.PaymentRequestVO;
 import br.com.payment.api.model.vo.ProductVO;
 import br.com.payment.api.service.OrderService;
 import br.com.payment.api.service.ProductService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
-import static org.junit.Assert.*;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CreditCardServiceTest {
 
     @InjectMocks
@@ -37,7 +40,7 @@ public class CreditCardServiceTest {
 
     private Product product;
 
-    @Before
+    @BeforeEach
     public void init() {
         this.product = new Product();
         this.product.setId(1l);
@@ -73,7 +76,6 @@ public class CreditCardServiceTest {
 
     }
 
-    @Test(expected = RuntimeException.class)
     public void givenRequestPaymentWithMoreThanOneItemAndWrongTotalValueWhenExecutePaymentShouldNotCreateOrder() {
         ProductVO productVO = new ProductVO();
         productVO.setProductId(1l);
@@ -92,7 +94,8 @@ public class CreditCardServiceTest {
 
         Mockito.doReturn(this.product).when(this.productService).load(Mockito.anyString());
 
-        creditCardService.execute(paymentRequestVO);
+        Throwable exception = assertThrows(RuntimeException.class,
+                ()->{creditCardService.execute(paymentRequestVO);} );
 
         Mockito.verify(creditCardService, Mockito.times(0)).sendAGatewayAuthorization(eq(paymentRequestVO));
 

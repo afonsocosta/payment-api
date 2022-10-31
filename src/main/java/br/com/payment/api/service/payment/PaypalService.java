@@ -7,7 +7,7 @@ import br.com.payment.api.service.ProductService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PaypalService extends BasePaymentService {
+public final class PaypalService extends BasePaymentService {
 
     public PaypalService(ProductService productService, OrderService orderService) {
         super(productService, orderService);

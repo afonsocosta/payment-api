@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class CreditCardService extends BasePaymentService {
+public final class CreditCardService extends BasePaymentService {
 
 
     public CreditCardService(ProductService productService, OrderService orderService) {
